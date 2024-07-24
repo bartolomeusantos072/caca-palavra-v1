@@ -35,14 +35,14 @@ async function inserirPalavra(){
        }
 
        let json = await response.json();
-	   let palavra= (json.word.length < tamanhoMatriz) && json.word ;
+	     let palavra= (json.word.length < tamanhoMatriz) && json.word ;
        let inverso= Math.random()>=0.5;
        let sentidos=[1, (tamanhoMatriz), (tamanhoMatriz-1), (tamanhoMatriz+1)]; //1, 20, 19,21
-	   let sentido=sentidos[Math.floor(Math.random()*sentidos.length)];
-	   let inicio= posicaoInicial(palavra.length, sentido);
+	     let sentido=sentidos[Math.floor(Math.random()*sentidos.length)];
+	     let inicio= posicaoInicial(palavra.length, sentido);
 	   
-	   let meuSentido=listaHTML(sentido);
-	   lista.push({palavra, meuSentido, inicio});
+	     let meuSentido=listaHTML(sentido);
+	     lista.push({palavra, meuSentido, inicio});
 		
        if(inverso){
         palavra=palavra.split("").reverse().join("");
