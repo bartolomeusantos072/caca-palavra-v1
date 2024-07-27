@@ -109,7 +109,7 @@ async function bancoPalavras(){
     };
     i++;
   }while(i < qtdePalavras);
-  
+  return listaPalavras;
 }
 
 async function tratarColisoes(){
@@ -137,8 +137,8 @@ async function tratarColisoes(){
 
 async function Main(){
 	await bancoPalavras();
-    await tratarColisoes()
-	/*
+  await tratarColisoes()
+
 	try{
 				
 		for(let i=0;i<listaPalavras.length;i++){
@@ -181,7 +181,6 @@ async function Main(){
 	}catch(error){
 		 console.error(error.message);
 	}
-	*/
 }
 
 Main();
