@@ -56,17 +56,15 @@ async function inserirPalavra(){
 
 }
 
- function posicaoInicial(tamanhoPalavra,sentido){
+ function posicaoInicial(palavra,sentido){
 	 
   let inicio= Math.floor(Math.random()*(tamanhoMatriz**2));
   let finalPalavraHorizontal=inicio%tamanhoMatriz+tamanhoPalavra;
   let diagonalEsquerda= tamanhoMatriz-1;
   let diagonalDireita = tamanhoMatriz+1;
+  let tamanhoPalavra = palavra.length;
 
-
-  if(sentido==1 &&  finalPalavraHorizontal > tamanhoMatriz){
-    inicio -= finalPalavraHorizontal-tamanhoMatriz; 
-  }
+  
   
   if(sentido==tamanhoMatriz && inicio+(tamanhoMatriz*(tamanhoPalavra-1)) >= tamanhoMatriz**2){  
     inicio -= inicio+(tamanhoMatriz*(tamanhoPalavra))-tamanhoMatriz**2;
@@ -80,8 +78,22 @@ async function inserirPalavra(){
     inicio += -1*((tamanhoPalavra-1)*(tamanhoMatriz+1));
   }
   
+  let comeco=inicio;
+  for(let j=0;j<palavra.length;j++){
+	if(sentido==1 &&  finalPalavraHorizontal > tamanhoMatriz){
+        inicio -= finalPalavraHorizontal-tamanhoMatriz; 
+	}else if(sentido==tamanhoMatriz-1 && j<palavra.length-1 && comeco % tamanhoMatriz ==	tamanhoMatriz-1){
+		inicio += palavra.length-j; 
+	}else if(sentido==tamanhoMatriz+1 && comeco > inicio && comeco % tamanhoMatriz == 0){
+		inicio -= palavra.length-j; 
+	}else{
+		comeco+=sentido;
+	}
+ }
+  
   return inicio;
 }
+
 
 async function bancoPalavras(){
 	
@@ -97,33 +109,40 @@ async function bancoPalavras(){
     };
     i++;
   }while(i < qtdePalavras);
-   return listaPalavras;
+  
 }
 
-
 async function tratarColisoes(){
-  let listaPalavras=await bancoPalavras();
-  console.log(listaPalavras);
-  /*
+  await bancoPalavras();
   for(let i=0;i<listaPalavras.length;i++){
-    let {palavra, sentido, inicio}=listaPalavras[i];
+    let {palavra, inverso, sentido, inicio}=listaPalavras[i];
+	let comeco=inicio;
     let k=0;
+	
     for(let j=0;j<palavra.length;j++){
-      if(auxMatriz.indexOf(inicio)){
-        console.log(palavra,'deve ser mudada de posicao') ;
-      }
-        inicio += (sentido);	
-    } 
+	
+      //verificar se a posicao já esta ocupada
+	  if((auxMatriz.indexOf(comeco) > -1) && palavra[comeco]!=palavra[j]){
+        posicaoInicial(palavra,sentido);
+		break;
+		
+      }else{
+		auxMatriz.push(comeco);  
+        comeco += (sentido);	
+	  } 	
+    }
+    console.log(auxMatriz);	
   }
-    */
 }
 
 async function Main(){
-	 
+	await bancoPalavras();
+    await tratarColisoes()
+	/*
 	try{
-    await tratarColisoes()		
+				
 		for(let i=0;i<listaPalavras.length;i++){
-			let {palavra, sentido, inicio}=listaPalavras[i];
+			let {palavra, inverso, sentido, inicio}=listaPalavras[i];
 
 			for(let j=0;j<palavra.length;j++){
 
@@ -151,7 +170,7 @@ async function Main(){
 			}
 			tdElement.appendChild(document.createTextNode(`${matrizLetras[i]}`));
 
-			tdElement.innerHTML+=`<sup>${i}</sup>`
+			//tdElement.innerHTML+=`<sup>${i}</sup>`
 			tblElement.appendChild(tdElement);
 			if ((i + 1) % 20 === 0) {
 				tblElement.appendChild(document.createElement('tr'));
@@ -162,6 +181,7 @@ async function Main(){
 	}catch(error){
 		 console.error(error.message);
 	}
+	*/
 }
 
 Main();
